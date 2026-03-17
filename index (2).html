@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nitin Chatlani — CS @ SDSU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+<style>
+/* ─── CSS VARIABLES ─────────────────────────────────────────────────────────── */
+:root {
+  --accent: #1E90FF;
+  --accent-dim: #1270cc;
+  --accent-glow: rgba(30,144,255,0.18);
+  --accent-soft: rgba(30,144,255,0.08);
+
+  --bg: #F8F7F4;
+  --bg2: #EFEEE9;
+  --bg3: #E5E3DC;
+  --surface: #FFFFFF;
+  --surface2: #F2F1ED;
+
+  --text: #1A1916;
+  --text2: #4A4844;
+  --text3: #7A7774;
+
+  --border: rgba(0,0,0,0.08);
+  --shadow: 0 4px 24px rgba(0,0,0,0.07);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,0.11);
+
+  --radius: 14px;
+  --radius-sm: 8px;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --progress-bg: var(--bg3);
+  --nav-blur: rgba(248,247,244,0.85);
+}
+[data-theme="dark"] {
+  --bg: #0F0F0E;
+  --bg2: #161614;
+  --bg3: #1E1E1B;
+  --surface: #1A1A17;
+  --surface2: #222220;
+
+  --text: #F0EFE9;
+  --text2: #B0AEA7;
+  --text3: #6E6C66;
+
+  --border: rgba(255,255,255,0.07);
+  --shadow: 0 4px 24px rgba(0,0,0,0.35);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,0.5);
+
+  --progress-bg: var(--bg3);
+  --nav-blur: rgba(15,15,14,0.88);
+}
+
+/* ─── RESET & BASE ───────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  transition: background 0.35s ease, color 0.35s ease;
+  overflow-x: hidden;
+}
+::selection { background: var(--accent-glow); color: var(--accent); }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+
+/* ─── SCROLL PROGRESS BAR ────────────────────────────────────────────────────── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; z-index: 1000;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--accent), #60BDFF);
+  transition: width 0.1s linear;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ─── NAV ────────────────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  background: var(--nav-blur);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 clamp(1.5rem, 5vw, 3rem);
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+  transition: background 0.35s ease;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.nav-logo span { color: var(--accent); }
+.nav-links {
+  display: flex; align-items: center; gap: 2rem;
+}
+.nav-links a {
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text2);
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-right { display: flex; align-items: center; gap: 1rem; }
+#theme-toggle {
+  width: 38px; height: 22px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+#theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="dark"] #theme-toggle::after { transform: translateX(16px); }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; background: none; border: none; padding: 4px;
+}
+.hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text); border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* ─── MOBILE NAV ─────────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .nav-links {
+    position: fixed; top: 60px; left: 0; right: 0;
+    background: var(--nav-blur);
+    backdrop-filter: blur(18px);
+    flex-direction: column; gap: 0;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    transform: translateY(-110%);
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    z-index: 800;
+  }
+  .nav-links.open { transform: translateY(0); }
+  .nav-links a { padding: 0.75rem 2rem; font-size: 0.9rem; }
+  .hamburger { display: flex; }
+}
+
+/* ─── SECTION BASE ───────────────────────────────────────────────────────────── */
+section { padding: clamp(5rem, 10vw, 8rem) clamp(1.5rem, 6vw, 4rem); max-width: 1100px; margin: 0 auto; }
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 3rem;
+  line-height: 1.15;
+}
+
+/* ─── SCROLL ANIMATIONS ──────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.65s cubic-bezier(.4,0,.2,1), transform 0.65s cubic-bezier(.4,0,.2,1);
+}
+.reveal.hidden {
+  opacity: 0;
+  transform: translateY(32px);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── HERO ───────────────────────────────────────────────────────────────────── */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding-top: 90px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 75% 40%, var(--accent-soft) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(30,144,255,0.05) 0%, transparent 60%);
+}
+.hero-noise {
+  position: absolute; inset: 0; z-index: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.hero-inner {
+  position: relative; z-index: 1;
+  max-width: 800px;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--accent-soft);
+  border: 1px solid rgba(30,144,255,0.2);
+  border-radius: 100px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.02em;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+.hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 8vw, 6.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--text);
+  margin-bottom: 1.2rem;
+}
+.hero-name .accent { color: var(--accent); }
+.hero-typing-wrap {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 600;
+  color: var(--text2);
+  height: 2em;
+  margin-bottom: 1.8rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+#typing-text { color: var(--accent); }
+.cursor {
+  display: inline-block;
+  width: 2px; height: 1.2em;
+  background: var(--accent);
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  border-radius: 1px;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.hero-bio {
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  color: var(--text2);
+  max-width: 520px;
+  margin-bottom: 2.2rem;
+  line-height: 1.75;
+  font-weight: 300;
+}
+.hero-cta {
+  display: flex; flex-wrap: wrap; gap: 1rem;
+  align-items: center;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  padding: 0.75rem 1.6rem;
+  border-radius: 100px;
+  border: none; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  box-shadow: 0 4px 18px rgba(30,144,255,0.32);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(30,144,255,0.42);
+  background: var(--accent-dim);
+}
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  padding: 0.75rem 1.6rem;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s, color 0.2s;
+}
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.hero-scroll-hint {
+  position: absolute; bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  color: var(--text3);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(6px)}
+}
+.hero-scroll-hint svg { opacity: 0.5; }
+
+/* ─── ABOUT ──────────────────────────────────────────────────────────────────── */
+#about { padding-top: 6rem; }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+@media (max-width: 700px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
+.about-img-wrap {
+  aspect-ratio: 4/5;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg3);
+  position: relative;
+  border: 1px solid var(--border);
+}
+.about-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 0.75rem;
+  color: var(--text3);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+.about-img-placeholder svg { opacity: 0.3; }
+.about-img-placeholder span {
+  opacity: 0.5;
+  text-align: center;
+  padding: 0 1rem;
+}
+.about-content p {
+  font-size: 1.02rem;
+  color: var(--text2);
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+.about-content p strong { color: var(--text); font-weight: 500; }
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem 1.25rem 1rem;
+  position: relative;
+  overflow: visible;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--text3);
+  letter-spacing: 0.03em;
+  font-weight: 400;
+}
+
+/* ─── SKILLS ─────────────────────────────────────────────────────────────────── */
+#skills { background: var(--bg2); border-radius: var(--radius); padding-left: clamp(2rem, 5vw, 4rem); padding-right: clamp(2rem, 5vw, 4rem); }
+.skills-categories { display: flex; flex-direction: column; gap: 2rem; }
+.skill-category-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 0.75rem;
+}
+.pills {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+}
+.pill {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 0.4rem 1rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text2);
+  transition: all 0.2s;
+  cursor: default;
+}
+.pill:hover {
+  background: var(--accent-soft);
+  border-color: rgba(30,144,255,0.3);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+.pill-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.5;
+}
+
+/* ─── EXPERIENCE ─────────────────────────────────────────────────────────────── */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 8px; bottom: 8px; left: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: 3rem;
+  padding-left: 1.75rem;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-dot {
+  position: absolute;
+  top: 6px; left: -2rem;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.timeline-meta {
+  display: flex; flex-wrap: wrap;
+  align-items: center; gap: 0.5rem 1rem;
+  margin-bottom: 0.4rem;
+}
+.timeline-date {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  font-weight: 600;
+  background: var(--accent-soft);
+  padding: 0.2rem 0.65rem;
+  border-radius: 100px;
+}
+.timeline-company {
+  font-size: 0.8rem;
+  color: var(--text3);
+  font-weight: 400;
+}
+.timeline-role {
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+.timeline-bullets {
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.timeline-bullets li {
+  font-size: 0.9rem;
+  color: var(--text2);
+  padding-left: 1.1rem;
+  position: relative;
+  line-height: 1.6;
+  font-weight: 300;
+}
+.timeline-bullets li::before {
+  content: '→';
+  position: absolute; left: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  top: 0.15em;
+}
+
+/* ─── PROJECTS ───────────────────────────────────────────────────────────────── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  display: flex; flex-direction: column;
+  transition: transform 0.25s cubic-bezier(.4,0,.2,1), box-shadow 0.25s;
+  position: relative;
+  overflow: visible;
+}
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(30,144,255,0.2);
+}
+.project-card:hover .project-icon { transform: scale(1.1) rotate(-4deg); }
+.project-icon {
+  width: 46px; height: 46px;
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1.1rem;
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  border: 1px solid rgba(30,144,255,0.12);
+}
+.project-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  margin-bottom: 1rem;
+  background: var(--bg3);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text3);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--border);
+}
+.project-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+  letter-spacing: -0.01em;
+}
+.project-subtitle {
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+}
+.project-desc {
+  font-size: 0.88rem;
+  color: var(--text2);
+  line-height: 1.65;
+  flex: 1;
+  font-weight: 300;
+  margin-bottom: 1.1rem;
+}
+.project-tags {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+}
+.tag {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid rgba(30,144,255,0.18);
+  padding: 0.2rem 0.55rem;
+  border-radius: 100px;
+}
+
+/* ─── CONTACT ────────────────────────────────────────────────────────────────── */
+#contact { text-align: center; }
+.contact-inner {
+  max-width: 640px; margin: 0 auto;
+}
+.contact-email {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  transition: color 0.2s;
+}
+.contact-email:hover { color: var(--accent); }
+.contact-links {
+  display: flex; flex-wrap: wrap;
+  justify-content: center; gap: 1rem;
+  margin-bottom: 3rem;
+}
+.contact-link {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 0.6rem 1.3rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text2);
+  transition: all 0.2s;
+}
+.contact-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+.contact-note {
+  font-size: 0.82rem;
+  color: var(--text3);
+  font-weight: 300;
+}
+
+/* ─── FOOTER ─────────────────────────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem clamp(1.5rem, 5vw, 3rem);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+  max-width: 1100px; margin: 0 auto;
+}
+.footer-copy {
+  font-size: 0.78rem;
+  color: var(--text3);
+}
+.footer-back {
+  font-size: 0.78rem;
+  color: var(--text3);
+  display: flex; align-items: center; gap: 0.4rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.footer-back:hover { color: var(--accent); }
+
+/* ─── UTILITY ────────────────────────────────────────────────────────────────── */
+.section-divider {
+  width: 40px; height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+
+<!-- Scroll progress -->
+<div id="progress-bar"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">N<span>.</span>C</div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button id="theme-toggle" aria-label="Toggle dark mode" title="Toggle light/dark mode"></button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────────────────────────────────────────── -->
+<section id="hero" style="max-width:100%;padding-left:clamp(1.5rem,8vw,7rem);">
+  <div class="hero-bg"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Available for opportunities · San Diego, CA</div>
+    <h1 class="hero-name">Nitin<br><span class="accent">Chatlani</span></h1>
+    <div class="hero-typing-wrap">
+      <span id="typing-text"></span><span class="cursor"></span>
+    </div>
+    <p class="hero-bio">
+      Computer Science sophomore at SDSU with a 3.9 GPA — building at the intersection of software, research, and real-world impact. From robotics teams to research labs to startups, I build things that matter.
+    </p>
+    <div class="hero-cta">
+      <a class="btn-primary" href="#projects">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="5 12 12 19 19 12"/></svg>
+        View Work
+      </a>
+      <a class="btn-secondary" href="#contact" id="cta-contact">Say Hello →</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>Scroll</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 10 12 15 17 10"/></svg>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─────────────────────────────────────────────────────────────────── -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-img-wrap reveal">
+      <div class="about-img-placeholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span>Drop your headshot at<br><strong>assets/img/headshot.jpg</strong></span>
+      </div>
+    </div>
+    <div class="about-content reveal">
+      <p class="section-label">About me</p>
+      <h2 class="section-title" style="margin-bottom:1.5rem;">Building software<br>with purpose.</h2>
+      <div class="section-divider"></div>
+      <p style="margin-top:1.2rem;">
+        I'm a <strong>CS sophomore at San Diego State University</strong> (GPA: 3.9) passionate about using technology to solve real problems. Whether I'm developing apps, conducting research on CS education equity, or leading a team of 100+ students — I care about the impact my work has on people.
+      </p>
+      <p>
+        Currently interning with <strong>Techstars San Diego × SDSU</strong>, one of just twelve students selected for the inaugural cohort. I also explore cybersecurity through SDSU's Cyberdefense Team and hold multiple CITI research certifications.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">3.9</div>
+          <div class="stat-label">GPA at SDSU</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100+</div>
+          <div class="stat-label">Students led in robotics</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">250+</div>
+          <div class="stat-label">Volunteer service hours</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">12</div>
+          <div class="stat-label">Techstars cohort size</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SKILLS ─────────────────────────────────────────────────────────────────── -->
+<section id="skills">
+  <p class="section-label reveal">Technical Skills</p>
+  <h2 class="section-title reveal">What I work with.</h2>
+  <div class="skills-categories">
+    <div class="reveal">
+      <div class="skill-category-label">Languages</div>
+      <div class="pills">
+        <span class="pill"><span class="pill-dot"></span>Java</span>
+        <span class="pill"><span class="pill-dot"></span>Python</span>
+        <span class="pill"><span class="pill-dot"></span>C++</span>
+        <span class="pill"><span class="pill-dot"></span>HTML</span>
+        <span class="pill"><span class="pill-dot"></span>CSS</span>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="skill-category-label">Frameworks &amp; Libraries</div>
+      <div class="pills">
+        <span class="pill"><span class="pill-dot"></span>Bootstrap</span>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="skill-category-label">Tools &amp; Platforms</div>
+      <div class="pills">
+        <span class="pill"><span class="pill-dot"></span>Git</span>
+        <span class="pill"><span class="pill-dot"></span>GitHub</span>
+        <span class="pill"><span class="pill-dot"></span>MS Office Suite</span>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="skill-category-label">Domains</div>
+      <div class="pills">
+        <span class="pill"><span class="pill-dot"></span>Data Structures &amp; Algorithms</span>
+        <span class="pill"><span class="pill-dot"></span>Cybersecurity</span>
+        <span class="pill"><span class="pill-dot"></span>CS Education Research</span>
+        <span class="pill"><span class="pill-dot"></span>Human-Computer Interaction</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EXPERIENCE ──────────────────────────────────────────────────────────────── -->
+<section id="experience">
+  <p class="section-label reveal">Experience</p>
+  <h2 class="section-title reveal">Where I've worked.</h2>
+  <div class="timeline">
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-date">Sept 2023 – Present</span>
+        <span class="timeline-company">Techstars San Diego × SDSU</span>
+      </div>
+      <div class="timeline-role">Intern</div>
+      <ul class="timeline-bullets">
+        <li>Selected as one of twelve students for the inaugural <em>Techstars San Diego powered by SDSU</em> intern cohort — a highly competitive program pairing students with early-stage startups.</li>
+        <li>Embedded with one of twelve startups (Airbuild, Babba Care, CargoShot, and others) to contribute to product, engineering, or growth initiatives.</li>
+        <li>Gaining hands-on exposure to the startup ecosystem, investor dynamics, and rapid product iteration.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-date">Summer 2023</span>
+        <span class="timeline-company">University of San Diego (Lavner Education)</span>
+      </div>
+      <div class="timeline-role">IT Intern + Instructor</div>
+      <ul class="timeline-bullets">
+        <li>Set up and maintained on-site computer hardware, software, and internet infrastructure, ensuring zero downtime during instruction days.</li>
+        <li>Delivered engaging CS instruction to students in both classroom and one-on-one settings, adapting lessons to different skill levels.</li>
+        <li>Assisted with code debugging, project backups, and system maintenance across the program.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-date">Feb – May 2023</span>
+        <span class="timeline-company">San Diego State University</span>
+      </div>
+      <div class="timeline-role">Student Research Assistant</div>
+      <ul class="timeline-bullets">
+        <li>Conducted CS education research under Professor Miranda Parker, investigating how spatial skills training influences student success in CS courses.</li>
+        <li>Analyzed assessment data to identify and reduce hidden biases in CS evaluations, with the goal of making the field more equitable.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-meta">
+        <span class="timeline-date">Aug 2020 – Jun 2021</span>
+        <span class="timeline-company">San Dieguito Academy</span>
+      </div>
+      <div class="timeline-role">Robotics President — Team Paradox</div>
+      <ul class="timeline-bullets">
+        <li>Led a team of 100+ high school students with support from 20+ industry mentors across STE(A)M fields — one of the largest robotics programs in the region.</li>
+        <li>Managed engineering (CAD, programming), marketing, and finance sub-teams, coordinating deadlines and annual competition goals.</li>
+        <li>Earned the FIRST Dean's List Award Semifinalist recognition for dedication to the program, recognized internationally.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── PROJECTS ───────────────────────────────────────────────────────────────── -->
+<section id="projects">
+  <p class="section-label reveal">Projects</p>
+  <h2 class="section-title reveal">Things I've built.</h2>
+  <div class="projects-grid">
+
+    <div class="project-card reveal">
+      <div class="project-icon">🌐</div>
+      <div class="project-title">Personal Portfolio Website</div>
+      <div class="project-subtitle">Web Development · Aug 2020 – Present</div>
+      <p class="project-desc">Designed and built my own portfolio from scratch to showcase projects, experience, and skills — the place where I control my own narrative as a developer. Keeps evolving as I do.</p>
+      <div class="project-tags">
+        <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">Bootstrap</span><span class="tag">GitHub Pages</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🥗</div>
+      <div class="project-title">Calorie Tracker App</div>
+      <div class="project-subtitle">Full-Stack App · Aug 2019 – May 2020</div>
+      <p class="project-desc">Built a full calorie-tracking application as an AP Computer Science final project that stores individual daily intake using relational databases. Earned college credit and demonstrated end-to-end product thinking at the high school level.</p>
+      <div class="project-tags">
+        <span class="tag">Java</span><span class="tag">Databases</span><span class="tag">OOP</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">📊</div>
+      <div class="project-title">CS Education Research</div>
+      <div class="project-subtitle">Research · SDSU, 2023</div>
+      <p class="project-desc">Collaborated with Professor Miranda Parker to investigate how spatial reasoning training affects student performance in CS courses. Focused on identifying assessment biases that disadvantage underrepresented groups — research with real equity stakes.</p>
+      <div class="project-tags">
+        <span class="tag">Research</span><span class="tag">Data Analysis</span><span class="tag">CS Ed</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🎨</div>
+      <div class="project-title">Anxiety Asset — QA &amp; Graphics</div>
+      <div class="project-subtitle">Creative / QA Role · Jun 2020 – Aug 2021</div>
+      <p class="project-desc">Created graphics and visual assets for the <em>Anxiety Asset</em> book and its social media platforms. Also handled quality assurance by proofreading all blog content before publication — blending creative and technical skills.</p>
+      <div class="project-tags">
+        <span class="tag">Graphic Design</span><span class="tag">QA</span><span class="tag">Social Media</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── CONTACT ────────────────────────────────────────────────────────────────── -->
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label reveal">Contact</p>
+    <h2 class="section-title reveal" style="margin-bottom:0.75rem;">Let's connect.</h2>
+    <p class="reveal" style="color:var(--text2);font-weight:300;margin-bottom:2.5rem;font-size:1rem;">
+      I'm always open to internships, research collaborations, or just a good conversation about tech and ideas. Shoot me a message.
+    </p>
+    <a class="contact-email reveal" id="email-link" href="#">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+      <span id="email-display">loading...</span>
+    </a>
+    <div class="contact-links reveal" id="contact-links-wrap">
+      <!-- built by JS -->
+    </div>
+    <p class="contact-note reveal">Based in San Diego, CA · Open to remote &amp; on-site</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-copy">© 2024 Nitin Chatlani — Built with care.</div>
+  <div class="footer-back" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    Back to top
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </div>
+</footer>
+
+<script>
+(function() {
+  /* ── LINKS (assembled at runtime) ─────────────────────────────────────── */
+  const emailUser = 'nitin.k.chatlani';
+  const emailDomain = 'gmail.com';
+  const email = emailUser + '@' + emailDomain;
+
+  const links = [
+    { label: 'LinkedIn', icon: '💼', url: 'https://linkedin.com/in/' + 'nitinchatlani' },
+    { label: 'Website', icon: '🌐', url: 'https://' + 'www.nitinchatlani.com' },
+    { label: 'GitHub', icon: '🐙', url: 'https://github.com/' + 'nitinchatlani' },
+  ];
+
+  // Email link
+  const emailLink = document.getElementById('email-link');
+  const emailDisplay = document.getElementById('email-display');
+  if (emailLink && emailDisplay) {
+    emailDisplay.textContent = email;
+    emailLink.href = 'mailto:' + email;
+  }
+
+  // Contact links
+  const wrap = document.getElementById('contact-links-wrap');
+  if (wrap) {
+    links.forEach(function(l) {
+      const a = document.createElement('a');
+      a.className = 'contact-link';
+      a.textContent = l.icon + ' ' + l.label;
+      a.href = l.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      wrap.appendChild(a);
+    });
+    // Phone
+    const phone = document.createElement('a');
+    phone.className = 'contact-link';
+    phone.textContent = '📞 760.402.6231';
+    phone.href = 'tel:' + '7604026231';
+    wrap.appendChild(phone);
+  }
+
+  /* ── TYPING ANIMATION ─────────────────────────────────────────────────── */
+  const phrases = [
+    'CS Student @ SDSU',
+    'Software Developer',
+    'Research Assistant',
+    'Robotics Leader',
+  ];
+  const typingEl = document.getElementById('typing-text');
+  let phraseIdx = 0, charIdx = 0, deleting = false;
+  function type() {
+    if (!typingEl) return;
+    const current = phrases[phraseIdx];
+    if (deleting) {
+      typingEl.textContent = current.substring(0, charIdx--);
+      if (charIdx < 0) {
+        deleting = false;
+        phraseIdx = (phraseIdx + 1) % phrases.length;
+        setTimeout(type, 400);
+        return;
+      }
+      setTimeout(type, 45);
+    } else {
+      typingEl.textContent = current.substring(0, charIdx++);
+      if (charIdx > current.length) {
+        deleting = true;
+        setTimeout(type, 2000);
+        return;
+      }
+      setTimeout(type, 85);
+    }
+  }
+  setTimeout(type, 600);
+
+  /* ── SCROLL PROGRESS ──────────────────────────────────────────────────── */
+  var bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', function() {
+    var scrolled = document.documentElement.scrollTop;
+    var total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    if (bar) bar.style.width = ((scrolled / total) * 100) + '%';
+  }, { passive: true });
+
+  /* ── THEME TOGGLE ─────────────────────────────────────────────────────── */
+  var themeBtn = document.getElementById('theme-toggle');
+  var html = document.documentElement;
+  // persist preference
+  var saved = localStorage.getItem('theme');
+  if (saved) html.setAttribute('data-theme', saved);
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function() {
+      var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  }
+
+  /* ── HAMBURGER ────────────────────────────────────────────────────────── */
+  var hamburger = document.getElementById('hamburger');
+  var navLinks = document.getElementById('nav-links');
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', function() {
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function() { navLinks.classList.remove('open'); });
+    });
+  }
+
+  /* ── SCROLL REVEAL ────────────────────────────────────────────────────── */
+  if ('IntersectionObserver' in window) {
+    var reveals = document.querySelectorAll('.reveal');
+    // only add hidden class if observer is supported
+    reveals.forEach(function(el) { el.classList.add('hidden'); });
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove('hidden');
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function(el) { observer.observe(el); });
+  }
+
+  /* ── STAGGER CARDS ────────────────────────────────────────────────────── */
+  document.querySelectorAll('.projects-grid .project-card').forEach(function(card, i) {
+    card.style.transitionDelay = (i * 0.08) + 's';
+  });
+  document.querySelectorAll('.timeline-item').forEach(function(item, i) {
+    item.style.transitionDelay = (i * 0.07) + 's';
+  });
+
+})();
+</script>
+</body>
+</html>
